@@ -1,78 +1,52 @@
 /**
- * 443. String Compression
- * Given an array of characters chars, compress it using the following algorithm:
-
-Begin with an empty string s. For each group of consecutive repeating characters in chars:
-
-If the group's length is 1, append the character to s.
-Otherwise, append the character followed by the group's length.
-The compressed string s should not be returned separately, but instead, be stored in the input character array chars. Note that group lengths that are 10 or longer will be split into multiple characters in chars.
-
-After you are done modifying the input array, return the new length of the array.
-
-You must write an algorithm that uses only constant extra space.
-
-Note: The characters in the array beyond the returned length do not matter and should be ignored.
-
- 
-
+ * 46. Permutations
+ * Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
 Example 1:
 
-Input: chars = ["a","a","b","b","c","c","c"]
-Output: 6
-Explanation: The groups are "aa", "bb", and "ccc". This compresses to "a2b2c3".
-After modifying the input array in-place, the first 6 characters of chars should be ["a","2","b","2","c","3"].
+Input: nums = [1,2,3]
+Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
 Example 2:
 
-Input: chars = ["a"]
-Output: 1
-Explanation: The only group is "a", which remains uncompressed since it is a single character.
-After modifying the input array in-place, the first character of chars should be ["a"].
+Input: nums = [0,1]
+Output: [[0,1],[1,0]]
 Example 3:
 
-Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
-Output: 4
-Explanation: The groups are "a" and "bbbbbbbbbbbb". This compresses to "ab12".
-After modifying the input array in-place, the first 4 characters of chars should be ["a","b","1","2"].
+Input: nums = [1]
+Output: [[1]]
+ 
 Constraints:
-
-1 <= chars.length <= 2000
-chars[i] is a lowercase English letter, uppercase English letter, digit, or symbol.
+1 <= nums.length <= 6
+-10 <= nums[i] <= 10
+All the integers of nums are unique.
  */
 
 /**
- * @param {character[]} chars
- * @return {number}
+ * @param {number[]} nums
+ * @return {number[][]}
  */
+nums = [1, 2, 3]
 
-chars = ["a", "a", "b", "b", "c", "c", "c"]
-// chars = ["a"]
-// Output = 6
-var compress = function (chars) {
-    let write = 0;
-    let read = 0;
+var permute = function (nums) {
+    const result = [];
+    const path = [];
+    const used = new Array(nums.length).fill(false);
 
-    while (read < chars.length) {
-        let current = chars[read];
-        let count = 0;
-        while (
-            read < chars.length && chars[read] === current
-        ) {
-            count++;
-            read++;
+    function backtrack() {
+        if (path.length === nums.length) {
+            result.push([...path]);
+            return;
         }
-
-        chars[write] = current;
-        write++;
-
-        if (count > 1) {
-            const digits = count.toString();
-            for (let digit of digits) {
-                chars[write] = digit;
-                write++;
-            }
+        for (let i = 0; i < nums.length; i++) {
+            if (used[i]) continue;
+            used[i] = true;
+            path.push(nums[i]);
+            backtrack();
+            path.pop();
+            used[i] = false;
         }
     }
-    return write;
+    backtrack();
+    return result;
 };
-console.log(compress(chars))
+
+console.log(permute(nums))
